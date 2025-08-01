@@ -8,9 +8,7 @@ from src.data_loader import get_dataloaders
 from src.loss import FocalTverskyLoss
 import matplotlib.pyplot as plt
 
-from src.loss import FocalTverskyLoss
-criterion = FocalTverskyLoss(alpha=0.5, beta=0.5, gamma=1.33)
- 
+
 # ---------- TRAIN FUNCTION ----------
 def train_one_epoch(model, loader, optimizer, criterion, device):
     model.train()
@@ -57,23 +55,30 @@ def main():
 
     # Hyperparameters
     lr = 1e-4
-    batch_size = 2  # 512x512 requires smaller batch
+    batch_size = 4
     num_epochs = 50
     img_size = 512
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    patch_size = 256  # Patch size for patch-based training
 
-    # Data loaders
+    # Device setup
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cuda":
+        print(f"✅ Using GPU: {torch.cuda.get_device_name(0)}")
+    else:
+        print("❌ GPU not available. Using CPU instead.")
+
+    # Data loaders with patch-based training
     train_loader, val_loader = get_dataloaders(
         train_img_dir, train_mask_dir,
         test_img_dir, test_mask_dir,
-        batch_size=batch_size, img_size=img_size
+        batch_size=batch_size, img_size=img_size, patch_size=patch_size
     )
 
     # Model
     model = DeepVesselNet(in_channels=3, out_channels=1).to(device)
 
-    # Loss function (Focal Tversky)
-    criterion = FocalTverskyLoss(alpha=0.5, beta=0.5, gamma=1.33)
+    # Loss function (Thin-vessel focused Focal Tversky)
+    criterion = FocalTverskyLoss(alpha=0.3, beta=0.7, gamma=1.33)
 
     # Optimizer & scheduler
     optimizer = optim.Adam(model.parameters(), lr=lr)
