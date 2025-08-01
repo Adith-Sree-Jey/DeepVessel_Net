@@ -73,7 +73,7 @@ Edit
 
 ```bash
 # Clone repo
-git clone https://github.com/YourUsername/DeepVesselNet-Retina-Segmentation.git
+git clone https://github.com/Adith-Sree-Jey/DeepVesselNet-Retina-Segmentation.git
 cd DeepVesselNet-Retina-Segmentation
 
 # Create and activate virtual environment
