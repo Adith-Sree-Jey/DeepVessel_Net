@@ -6,6 +6,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 
+from src.utils import clean_prediction
 
 # ---------- METRIC FUNCTIONS ----------
 def dice_coef(y_pred, y_true, smooth=1e-6):
@@ -79,3 +80,4 @@ def plot_results(image, ground_truth, prediction, save_path=None):
         os.makedirs(os.path.dirname(save_path), exist_ok=True)
         plt.savefig(save_path, dpi=300)
     plt.show()
+
